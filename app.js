@@ -15,6 +15,8 @@ app.listen(port, () => {
 });
 */
 
+//Instanciando el servidor creado como clase
 const server = new Server();
 
+//Haciendo llamado al metodo listener del server
 server.listener();
