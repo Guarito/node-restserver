@@ -1,28 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
+const {
+    usersGet,
+    usersPost,
+    usersPut,
+    usersDelete,
+} = require("../controllers/users.controller");
+
+/* router.get("/", (req, res) => {
     res.json({
         msg: "Message from GET request",
     });
-});
+}); */
 
-router.post("/", (req, res) => {
-    res.json({
-        msg: "Message from POST request",
-    });
-});
+router.get("/", usersGet);
 
-router.put("/", (req, res) => {
-    res.json({
-        msg: "Message from PUT request",
-    });
-});
+router.post("/", usersPost);
 
-router.delete("/", (req, res) => {
-    res.json({
-        msg: "Message from DELETE request",
-    });
-});
+router.put("/", usersPut);
+
+router.delete("/", usersDelete);
 
 module.exports = router;
