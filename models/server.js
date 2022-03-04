@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 
+const usersRoutes = require("../routes/users.routes");
+
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
+
+        //Listado de rutas definidas
+        this.usersPath = "/api/users";
 
         //Middlewares
         this.middlewares();
@@ -22,29 +27,8 @@ class Server {
     }
 
     routes() {
-        this.app.get("/api", (req, res) => {
-            res.json({
-                msg: "Message from GET request",
-            });
-        });
-
-        this.app.post("/api", (req, res) => {
-            res.json({
-                msg: "Message from POST request",
-            });
-        });
-
-        this.app.put("/api", (req, res) => {
-            res.json({
-                msg: "Message from PUT request",
-            });
-        });
-
-        this.app.delete("/api", (req, res) => {
-            res.json({
-                msg: "Message from DELETE request",
-            });
-        });
+        //Rutas de User
+        this.app.use(this.usersPath, usersRoutes);
     }
 
     //Metodo para lanzar el servidor en el puerto
