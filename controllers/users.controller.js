@@ -21,8 +21,11 @@ const usersPost = (req = request, res = response) => {
 };
 
 const usersPut = (req = request, res = response) => {
+    const id = req.params.id;
+    // console.log(id);
     res.json({
         msg: "Message from PUT request from users.ontroller",
+        id,
     });
 };
 
