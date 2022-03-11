@@ -4,19 +4,27 @@
 
 const { response, request } = require("express");
 
+const User = require("../models/user");
+
 const usersGet = (req = request, res = response) => {
     res.json({
         msg: "Message from GET request from users.controller",
     });
 };
 
-const usersPost = (req = request, res = response) => {
+const usersPost = async (req = request, res = response) => {
     const body = req.body;
     // console.log(body);
 
+    const user = new User(body);
+
+    //Grabando el usuario en la base de datos
+    await user.save();
+
     res.json({
         msg: "Message from POST request from users.ontroller",
-        body,
+        user,
+        // body,
     });
 };
 
