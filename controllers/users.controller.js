@@ -3,6 +3,7 @@
 // const request = express.request;
 
 const { response, request } = require("express");
+const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
 
@@ -13,10 +14,21 @@ const usersGet = (req = request, res = response) => {
 };
 
 const usersPost = async (req = request, res = response) => {
-    const body = req.body;
+    // const body = req.body;
     // console.log(body);
+    const { name, password, email, role } = req.body;
 
-    const user = new User(body);
+    const user = new User({
+        name,
+        password,
+        email,
+        role,
+    });
+
+    //Encriptando la contrasenha
+    // const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, 10);
+    user.password = hash;
 
     //Grabando el usuario en la base de datos
     await user.save();
