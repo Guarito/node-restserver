@@ -18,12 +18,22 @@ const usersPost = async (req = request, res = response) => {
     // console.log(body);
     const { name, password, email, role } = req.body;
 
+    //Instancia del modelo User
     const user = new User({
         name,
         password,
         email,
         role,
     });
+
+    //Verificando existencia del correo electronico
+    //more info: https://mongoosejs.com/docs/api.html#model_Model.findOne
+    const emailExist = await User.findOne({ email: email });
+    if (emailExist) {
+        return res.status(400).json({
+            msg: "El correo se encuentra en uso.",
+        });
+    }
 
     //Encriptando la contrasenha
     // const salt = bcrypt.genSaltSync(10);
