@@ -4,6 +4,8 @@ const router = express.Router();
 //more info: https://express-validator.github.io/docs/check-api.html
 const { check } = require("express-validator");
 
+const { validateFields } = require("../middlewares/validate-fields");
+
 const {
     usersGet,
     usersPost,
@@ -28,7 +30,7 @@ router.post(
         "ADMIN_ROLE",
         "USER_ROLE",
     ]),
-
+    validateFields,
     usersPost
 );
 
