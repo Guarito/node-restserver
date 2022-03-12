@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //more info: https://express-validator.github.io/docs/check-api.html
-const { body, validationResult } = require("express-validator");
+const { check } = require("express-validator");
 
 const {
     usersGet,
@@ -19,16 +19,18 @@ const {
 
 router.get("/", usersGet);
 
-router.post("/", body("email").isEmail(), (req, res, next) => {
-    try {
-        validationResult(req).throw();
-        usersPost(req, res);
-    } catch (err) {
-        // console.log(err);
-        // Oh noes. This user doesn't have enough skills for this...
-        res.status(400).json(err);
-    }
-});
+router.post(
+    "/",
+    check("name", "Ingrese un nombre valido").notEmpty(),
+    check("email", "Ingrese un correo valido.").isEmail(),
+    check("password", "Debe contener mas de 6 digitos.").isLength({ min: 6 }),
+    check("role", "El rol definido no es valido.").isIn([
+        "ADMIN_ROLE",
+        "USER_ROLE",
+    ]),
+
+    usersPost
+);
 
 router.put("/:id", usersPut);
 
