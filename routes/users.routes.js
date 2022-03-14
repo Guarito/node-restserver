@@ -6,14 +6,13 @@ const { check } = require("express-validator");
 
 const { validateFields } = require("../middlewares/validate-fields");
 
-const Role = require("../models/role");
-
 const {
     usersGet,
     usersPost,
     usersPut,
     usersDelete,
 } = require("../controllers/users.controller");
+const { roleValidator } = require("../helpers/db-validators");
 
 /* router.get("/", (req, res) => {
     res.json({
@@ -32,14 +31,7 @@ router.post(
     //     "ADMIN_ROLE",
     //     "USER_ROLE",
     // ])
-    check("role").custom(async (role = "") => {
-        const existRole = await Role.findOne({ role: role });
-        if (!existRole) {
-            throw new Error(
-                `El rol ${role} no se encuentra validado en la base de datos.`
-            );
-        }
-    }),
+    check("role").custom((role) => roleValidator(role)),
     validateFields,
     usersPost
 );
