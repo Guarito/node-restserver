@@ -12,7 +12,11 @@ const {
     usersPut,
     usersDelete,
 } = require("../controllers/users.controller");
-const { roleValidator, emailValidator } = require("../helpers/db-validators");
+const {
+    roleValidator,
+    emailValidator,
+    userValidator,
+} = require("../helpers/db-validators");
 
 /* router.get("/", (req, res) => {
     res.json({
@@ -40,7 +44,10 @@ router.post(
 
 router.put(
     "/:id",
-    check("id", "No es un ID valido").isMongoId(),
+    check("id", "No es un ID valido de mongoDB")
+        .isMongoId()
+        .custom(userValidator),
+    check("role").custom(roleValidator),
     validateFields,
     usersPut
 );

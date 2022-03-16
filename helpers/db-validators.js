@@ -21,7 +21,19 @@ const emailValidator = async (email = "") => {
     }
 };
 
+//Verificando si el usuario a actualizar existe
+const userValidator = async (id) => {
+    const existUser = await User.findById(id);
+
+    if (!existUser) {
+        throw new Error(
+            `El id ${id} no se encuentra asignado a ningun usuario.`
+        );
+    }
+};
+
 module.exports = {
     roleValidator,
     emailValidator,
+    userValidator,
 };
