@@ -5,8 +5,6 @@
 const { response, request } = require("express");
 const bcrypt = require("bcryptjs");
 
-
-
 const User = require("../models/user");
 
 const usersGet = (req = request, res = response) => {
@@ -16,7 +14,6 @@ const usersGet = (req = request, res = response) => {
 };
 
 const usersPost = async (req = request, res = response) => {
-    
     // const body = req.body;
     // console.log(body);
     const { name, password, email, role } = req.body;
@@ -28,15 +25,6 @@ const usersPost = async (req = request, res = response) => {
         email,
         role,
     });
-
-    //Verificando existencia del correo electronico
-    //more info: https://mongoosejs.com/docs/api.html#model_Model.findOne
-    const emailExist = await User.findOne({ email: email });
-    if (emailExist) {
-        return res.status(400).json({
-            msg: "El correo se encuentra en uso.",
-        });
-    }
 
     //Encriptando la contrasenha
     // const salt = bcrypt.genSaltSync(10);

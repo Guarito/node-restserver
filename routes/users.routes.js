@@ -12,7 +12,7 @@ const {
     usersPut,
     usersDelete,
 } = require("../controllers/users.controller");
-const { roleValidator } = require("../helpers/db-validators");
+const { roleValidator, emailValidator } = require("../helpers/db-validators");
 
 /* router.get("/", (req, res) => {
     res.json({
@@ -25,7 +25,9 @@ router.get("/", usersGet);
 router.post(
     "/",
     check("name", "Ingrese un nombre valido").notEmpty(),
-    check("email", "Ingrese un correo valido.").isEmail(),
+    check("email", "El correo ingresado es invalido")
+        .custom((email) => emailValidator(email))
+        .isEmail(),
     check("password", "Debe contener mas de 6 digitos.").isLength({ min: 6 }),
     // check("role", "El rol definido no es valido.").isIn([
     //     "ADMIN_ROLE",
