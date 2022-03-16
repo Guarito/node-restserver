@@ -38,7 +38,12 @@ router.post(
     usersPost
 );
 
-router.put("/:id", usersPut);
+router.put(
+    "/:id",
+    check("id", "No es un ID valido").isMongoId(),
+    validateFields,
+    usersPut
+);
 
 router.delete("/", usersDelete);
 

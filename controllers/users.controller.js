@@ -16,7 +16,7 @@ const usersGet = (req = request, res = response) => {
 const usersPost = async (req = request, res = response) => {
     // const body = req.body;
     // console.log(body);
-    const { name, password, email, role } = req.body;
+    const { name, password, email, role, google } = req.body;
 
     //Instancia del modelo User
     const user = new User({
@@ -24,6 +24,7 @@ const usersPost = async (req = request, res = response) => {
         password,
         email,
         role,
+        google,
     });
 
     //Encriptando la contrasenha
@@ -41,12 +42,22 @@ const usersPost = async (req = request, res = response) => {
     });
 };
 
-const usersPut = (req = request, res = response) => {
+const usersPut = async (req = request, res = response) => {
     const id = req.params.id;
-    // console.log(id);
+    const { _id, password, google, email, ...rest } = req.body;
+
+    if (password) {
+        const hash = bcrypt.hashSync(password, 10);
+        //Establecemos el hash al objeto rest para asignarle la nueva contraseha
+        rest.password = hash;
+    }
+    const user = await User.findByIdAndUpdate(id, rest, {
+        returnOriginal: false,
+    });
+
     res.json({
         msg: "Message from PUT request from users.ontroller",
-        id,
+        user,
     });
 };
 
