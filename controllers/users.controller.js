@@ -7,9 +7,11 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
 
-const usersGet = (req = request, res = response) => {
+const usersGet = async (req = request, res = response) => {
+    const users = await User.find({});
     res.json({
         msg: "Message from GET request from users.controller",
+        users,
     });
 };
 
