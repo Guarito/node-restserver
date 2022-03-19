@@ -1,16 +1,29 @@
 // const express = require("express");
 // const response = express.response;
 // const request = express.request;
-
 const { response, request } = require("express");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
 
 const usersGet = async (req = request, res = response) => {
-    const users = await User.find({});
+    const { from = 0, limit = 5 } = req.query;
+    if (isNaN(from) || isNaN(limit)) {
+        return res.json({
+            msg: `Parameters on query must be numbers`,
+        });
+    }
+    // const users = await User.find({ state: true });
+    // const total = await User.countDocuments({ state: true });
+    const query = { state: true };
+    const [total, users] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query).limit(limit).skip(from),
+    ]);
+
     res.json({
-        msg: "Message from GET request from users.controller",
+        // msg: "Message from GET request from users.controller",
+        total,
         users,
     });
 };
