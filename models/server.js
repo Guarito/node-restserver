@@ -1,15 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 
-const usersRoutes = require("../routes/users.routes");
 const { dbConnection } = require("../database/config");
+
+const authRoutes = require("../routes/auth.routes");
+const usersRoutes = require("../routes/users.routes");
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
 
-        //Listado de paths de rutas definidas
+        //Listado de rutas definidas
+        this.authPath = "/api/auth";
         this.usersPath = "/api/users";
 
         //Conectar a base de datos
@@ -38,6 +41,8 @@ class Server {
     }
 
     routes() {
+        //Ruta de auth
+        this.app.use(this.authPath, authRoutes);
         //Rutas de User
         this.app.use(this.usersPath, usersRoutes);
     }
