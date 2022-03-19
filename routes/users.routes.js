@@ -52,6 +52,13 @@ router.put(
     usersPut
 );
 
-router.delete("/", usersDelete);
+router.delete(
+    "/:id",
+    check("id", "No es un ID valido de mongoDB")
+        .isMongoId()
+        .custom(userValidator),
+    validateFields,
+    usersDelete
+);
 
 module.exports = router;

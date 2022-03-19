@@ -76,9 +76,15 @@ const usersPut = async (req = request, res = response) => {
     });
 };
 
-const usersDelete = (req = request, res = response) => {
+const usersDelete = async (req = request, res = response) => {
+    const { id } = req.params;
+
+    // const user = await User.updateOne({ _id: id }, { state: false });
+    const user = await User.findByIdAndUpdate(id, { state: false });
+
     res.json({
-        msg: "Message from DELETE request from users.ontroller",
+        // msg: "Message from DELETE request from users.ontroller",
+        user,
     });
 };
 
