@@ -32,6 +32,8 @@ const login = async (req = request, res = response) => {
 
         console.log(checkPassword);
         //Generar el JWT
+        
+
         res.json({
             msg: "Login success",
         });
