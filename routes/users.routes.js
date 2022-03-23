@@ -29,7 +29,7 @@ router.get("/", usersGet);
 router.post(
     "/",
     check("name", "Ingrese un nombre valido").notEmpty(),
-    check("email", "El correo ingresado es invalido"),
+    check("email", "El correo ingresado es invalido").custom(emailValidator),
     check("password", "Debe contener mas de 6 digitos.").isLength({ min: 6 }),
     // check("role", "El rol definido no es valido.").isIn([
     //     "ADMIN_ROLE",

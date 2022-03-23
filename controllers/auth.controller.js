@@ -1,5 +1,7 @@
 const { response, request } = require("express");
+const { createSecretKey } = require("crypto");
 const bcrypt = require("bcryptjs");
+const jose = require("jose");
 
 const User = require("../models/user");
 
@@ -29,13 +31,27 @@ const login = async (req = request, res = response) => {
                 msg: "La contraseña ingresada es incorrecta. Intente nuevamente.",
             });
         }
+        // console.log(checkPassword);
 
-        console.log(checkPassword);
         //Generar el JWT
-        
+        const payload = {
+            hola: "hola",
+        };
+        const privateKey = createSecretKey(
+            process.env.SECRETORPRIVATEKEY,
+            "utf-8"
+        );
+
+        const jwt = await new jose.SignJWT(payload)
+            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+            .setIssuedAt()
+            .setExpirationTime("2h")
+            .sign(privateKey);
+        // console.log(jwt);
 
         res.json({
             msg: "Login success",
+            jwt,
         });
     } catch (error) {
         console.error(error);
