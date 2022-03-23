@@ -16,7 +16,7 @@ const login = async (req = request, res = response) => {
                 msg: "El correo y contraseña ingresado no se encuentran registrados.",
             });
         }
-        // console.log(user);
+        console.log(user);
 
         //Verificacion del estado del usuario (si esta activo)
         if (!user.state) {
@@ -35,7 +35,7 @@ const login = async (req = request, res = response) => {
 
         //Generar el JWT
         const payload = {
-            hola: "hola",
+            uid: user.id,
         };
         const privateKey = createSecretKey(
             process.env.SECRETORPRIVATEKEY,
@@ -51,6 +51,7 @@ const login = async (req = request, res = response) => {
 
         res.json({
             msg: "Login success",
+            user,
             jwt,
         });
     } catch (error) {

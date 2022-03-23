@@ -41,8 +41,13 @@ const UserSchema = new Schema(
 //Eliminando la propiedad de la contrasenha para que esta no retorne en la respuesta.
 UserSchema.methods.toJSON = function () {
     const userObject = this.toObject();
-    delete userObject.password;
-    return userObject;
+    // userObject.uid = userObject._id;
+    // delete userObject._id;
+    // delete userObject.password;
+    // return userObject;
+    const { password, _id, ...user } = userObject;
+    user.uid = _id;
+    return user;
 };
 
 const User = model("User", UserSchema);
