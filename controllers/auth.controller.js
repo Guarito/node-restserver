@@ -16,7 +16,7 @@ const login = async (req = request, res = response) => {
                 msg: "El correo y contraseña ingresado no se encuentran registrados.",
             });
         }
-        console.log(user);
+        // console.log(user);
 
         //Verificacion del estado del usuario (si esta activo)
         if (!user.state) {
@@ -49,6 +49,13 @@ const login = async (req = request, res = response) => {
             .sign(privateKey);
         // console.log(jwt);
 
+        const { payload: payloadBody, protectedHeader } = await jose.jwtVerify(
+            jwt,
+            privateKey
+        );
+        console.log(payloadBody, protectedHeader);
+
+        //Retorno de respuesta
         res.json({
             msg: "Login success",
             user,
