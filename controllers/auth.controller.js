@@ -1,9 +1,10 @@
 const { response, request } = require("express");
-const { createSecretKey } = require("crypto");
+
 const bcrypt = require("bcryptjs");
 const jose = require("jose");
 
 const User = require("../models/user");
+const { generateJWT } = require("../helpers/generate-jwt");
 
 const login = async (req = request, res = response) => {
     const { email, password } = req.body;
@@ -34,26 +35,13 @@ const login = async (req = request, res = response) => {
         // console.log(checkPassword);
 
         //Generar el JWT
-        const payload = {
-            uid: user.id,
-        };
-        const privateKey = createSecretKey(
-            process.env.SECRETORPRIVATEKEY,
-            "utf-8"
-        );
-
-        const jwt = await new jose.SignJWT(payload)
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setIssuedAt()
-            .setExpirationTime("2h")
-            .sign(privateKey);
-        // console.log(jwt);
-
-        const { payload: payloadBody, protectedHeader } = await jose.jwtVerify(
+        const { jwt, privateKey } = await generateJWT(user.id);
+        //Validando el JWT
+        const { payload, protectedHeader } = await jose.jwtVerify(
             jwt,
             privateKey
         );
-        console.log(payloadBody, protectedHeader);
+        console.log(payload, protectedHeader);
 
         //Retorno de respuesta
         res.json({
