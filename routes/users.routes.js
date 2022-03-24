@@ -5,6 +5,7 @@ const router = express.Router();
 const { check } = require("express-validator");
 
 const { validateFields } = require("../middlewares/validate-fields");
+const { validateJWT } = require("../middlewares/validate-jwt");
 
 const {
     usersGet,
@@ -52,6 +53,7 @@ router.put(
 
 router.delete(
     "/:id",
+    validateJWT,
     check("id", "No es un ID valido de mongoDB")
         .isMongoId()
         .custom(userValidator),
