@@ -1,6 +1,7 @@
 const { response, request } = require("express");
 const jose = require("jose");
 const { createSecretKey } = require("crypto");
+const User = require("../models/user");
 
 const validateJWT = async (req = request, res = response, next) => {
     const jwtHeader = req.get("Authorization");
@@ -23,8 +24,10 @@ const validateJWT = async (req = request, res = response, next) => {
         //Extraemos el uid
         const { uid } = payload;
 
-        //Creamos referencia al uid en la request para tener acceso a el en los controladores
-        req.uid = uid;
+        //Extraemos datos del usuario que se encuentra autenticado y los enviamos a la request para su uso en los controladores
+        const userAuthenticated = await User.findById(uid);
+        req.user = userAuthenticated;
+
         next();
     } catch (error) {
         // console.log(error);
