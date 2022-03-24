@@ -13,7 +13,7 @@ const generateJWT = async (uid = "") => {
         .setExpirationTime("2h")
         .sign(privateKey);
     // console.log(jwt);
-    return { jwt, privateKey };
+    return jwt;
 };
 
 module.exports = {

@@ -35,13 +35,7 @@ const login = async (req = request, res = response) => {
         // console.log(checkPassword);
 
         //Generar el JWT
-        const { jwt, privateKey } = await generateJWT(user.id);
-        //Validando el JWT
-        const { payload, protectedHeader } = await jose.jwtVerify(
-            jwt,
-            privateKey
-        );
-        console.log(payload, protectedHeader);
+        const jwt = await generateJWT(user.id);
 
         //Retorno de respuesta
         res.json({
