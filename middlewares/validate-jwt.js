@@ -24,9 +24,26 @@ const validateJWT = async (req = request, res = response, next) => {
         //Extraemos el uid
         const { uid } = payload;
 
-        //Extraemos datos del usuario que se encuentra autenticado y los enviamos a la request para su uso en los controladores
+        //Extraemos datos del usuario que se encuentra autenticado
         const userAuthenticated = await User.findById(uid);
+
+        if (userAuthenticated) {
+            return res.status(401).json({
+                msg: "El usuario no existe.",
+            });
+        }
+
+        //Verificar si el usuario autenticado es valido (no posea state:false)
+        if (!userAuthenticated.state) {
+            return res.status(401).json({
+                msg: "Token invalido. El usuario que intenta ingresar se encuentra deshabilitado.",
+            });
+        }
+
+        // Enviando datos del usuario autenticado a la request para su uso en los controladores
         req.user = userAuthenticated;
+
+        //Verificar que el
 
         next();
     } catch (error) {
