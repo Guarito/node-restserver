@@ -79,12 +79,16 @@ const usersPut = async (req = request, res = response) => {
 const usersDelete = async (req = request, res = response) => {
     const { id } = req.params;
 
+    //Extraemos el uid proveniente de la request. Creado en validate-jwt
+    const uid = req.uid;
+
     // const user = await User.updateOne({ _id: id }, { state: false });
     const user = await User.findByIdAndUpdate(id, { state: false });
 
     res.json({
         // msg: "Message from DELETE request from users.ontroller",
         user,
+        uid,
     });
 };
 

@@ -20,6 +20,11 @@ const validateJWT = async (req = request, res = response, next) => {
             privateKey
         );
 
+        //Extraemos el uid
+        const { uid } = payload;
+
+        //Creamos referencia al uid en la request para tener acceso a el en los controladores
+        req.uid = uid;
         next();
     } catch (error) {
         // console.log(error);
