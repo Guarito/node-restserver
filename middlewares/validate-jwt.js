@@ -43,8 +43,6 @@ const validateJWT = async (req = request, res = response, next) => {
         // Enviando datos del usuario autenticado a la request para su uso en los controladores
         req.user = userAuthenticated;
 
-        //Verificar que el
-
         next();
     } catch (error) {
         // console.log(error);
