@@ -27,7 +27,7 @@ const validateJWT = async (req = request, res = response, next) => {
         //Extraemos datos del usuario que se encuentra autenticado
         const userAuthenticated = await User.findById(uid);
 
-        if (userAuthenticated) {
+        if (!userAuthenticated) {
             return res.status(401).json({
                 msg: "El usuario no existe.",
             });
