@@ -2,7 +2,6 @@ const { response, request } = require("express");
 
 const bcrypt = require("bcryptjs");
 
-
 const User = require("../models/user");
 const { generateJWT } = require("../helpers/generate-jwt");
 
@@ -51,6 +50,13 @@ const login = async (req = request, res = response) => {
     }
 };
 
+const googleSignIn = (req = request, res = response) => {
+    const { id_token } = req.body;
+    res.json({
+        msg: "Se ha logueado con exito desde Google SignIn",
+    });
+};
 module.exports = {
     login,
+    googleSignIn,
 };
