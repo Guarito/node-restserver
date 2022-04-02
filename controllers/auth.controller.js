@@ -60,7 +60,7 @@ const googleSignIn = async (req = request, res = response) => {
         if (googleUser) {
             res.json({
                 msg: "Se ha logueado con exito desde Google SignIn",
-                id_token,
+                googleUser,
             });
         }
     } catch (error) {

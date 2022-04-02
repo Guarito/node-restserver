@@ -32,7 +32,7 @@
                 : "https://rest-server-guarito.herokuapp.com/api/auth/google";
 
             function handleCredentialResponse(response) {
-                console.log("Encoded JWT ID token: " + response.credential);
+                // console.log("Encoded JWT ID token: " + response.credential);
                 const id_token = response.credential;
                 const data = { id_token };
                 // console.log(data);
