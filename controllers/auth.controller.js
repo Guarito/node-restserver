@@ -54,6 +54,7 @@ const googleSignIn = (req = request, res = response) => {
     const { id_token } = req.body;
     res.json({
         msg: "Se ha logueado con exito desde Google SignIn",
+        id_token,
     });
 };
 module.exports = {

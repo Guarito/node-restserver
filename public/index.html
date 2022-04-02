@@ -14,26 +14,73 @@
         <h1>Access Denied...</h1>
         <hr />
         <h2>Google Sign-In</h2>
-        <script
+        <!-- <script
             src="https://apis.google.com/js/platform.js"
             async
             defer
         ></script>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+
+        <script
+            src="https://accounts.google.com/gsi/client"
+            async
+            defer
+        ></script>
         <script>
-            function onSignIn(googleUser) {
-                var profile = googleUser.getBasicProfile();
-                console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                console.log("Name: " + profile.getName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+            var url = window.location.hostname.includes("localhost")
+                ? "http://localhost:8000/api/auth/google"
+                : "https://rest-server-guarito.herokuapp.com/api/auth/google";
 
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log(id_token);
+            function handleCredentialResponse(response) {
+                console.log("Encoded JWT ID token: " + response.credential);
+                const id_token = response.credential;
+                const data = { id_token };
+                // console.log(data);
+                fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                })
+                    .then((resp) => resp.json())
+                    .then((data) => console.log("Desde el server:", data))
+                    .catch(console.log);
             }
-        </script>
+            window.onload = function () {
+                google.accounts.id.initialize({
+                    client_id:
+                        "419737381052-96ump6eotp6ibm1241d7866mbm2su3gt.apps.googleusercontent.com",
+                    callback: handleCredentialResponse,
+                });
+                google.accounts.id.renderButton(
+                    document.getElementById("buttonDiv"),
+                    { theme: "outline", size: "large" } // customization attributes
+                );
+                google.accounts.id.prompt(); // also display the One Tap dialog
+            };
+            // function onSignIn(googleUser) {
+            //     var profile = googleUser.getBasicProfile();
+            //     console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            //     console.log("Name: " + profile.getName());
+            //     console.log("Image URL: " + profile.getImageUrl());
+            //     console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-        <a href="#" onclick="signOut();">Sign out</a>
+            //     var id_token = googleUser.getAuthResponse().id_token;
+            //     const data = { id_token };
+            //     console.log(id_token);
+
+            //     fetch(url, {
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         body: JSON.stringify(data),
+            //     })
+            //         .then((resp) => resp.json())
+            //         .then((data) => console.log("Desde el server:", data))
+            //         .catch(console.log);
+            // }
+        </script>
+        <div id="buttonDiv"></div>
+
+        <!-- <a href="#" onclick="signOut();">Sign out</a>
         <script>
             function signOut() {
                 var auth2 = gapi.auth2.getAuthInstance();
@@ -41,7 +88,7 @@
                     console.log("User signed out.");
                 });
             }
-        </script>
+        </script> -->
         <hr />
         <footer>Deployed at Heroku</footer>
     </body>
