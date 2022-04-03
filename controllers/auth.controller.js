@@ -1,7 +1,6 @@
 const { response, request } = require("express");
 
 const bcrypt = require("bcryptjs");
-
 const User = require("../models/user");
 const { generateJWT } = require("../helpers/generate-jwt");
 const { googleVerify } = require("../helpers/google-verify");
@@ -56,14 +55,44 @@ const googleSignIn = async (req = request, res = response) => {
 
     try {
         const googleUser = await googleVerify(id_token);
-        console.log(googleUser);
-        if (googleUser) {
-            res.json({
-                msg: "Se ha logueado con exito desde Google SignIn",
-                googleUser,
+        // console.log(googleUser);
+        const { name, email, img } = googleUser;
+
+        //Verificar existencia de correo en base de datos
+        let user = await User.findOne({ email: email });
+        // console.log(userExist);
+        //Si el usuario no existe, creamos el usuario
+        if (!user) {
+            const data = {
+                name,
+                email,
+                password: "default",
+                img,
+                google: true,
+            };
+            user = new User(data);
+            // console.log(user);
+            await user.save();
+        }
+
+        //Verificamos que el usuario este habilitado en la DB
+        if (!user.state) {
+            return res.status(401).json({
+                msg: "Usuario inhabilitado. Por favor, comuniquese con el administrador.",
             });
         }
+
+        //Generamos el JWT
+        const jwt = await generateJWT(user.id);
+
+        //Retorno de respuesta
+        res.json({
+            msg: "Login from Google success",
+            user,
+            jwt,
+        });
     } catch (error) {
+        console.log(error);
         res.status(400).json({
             msg: "Token de Google no valido",
         });
